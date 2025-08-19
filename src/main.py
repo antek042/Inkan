@@ -1,5 +1,7 @@
 import flet as ft
 import disk_utils
+import os
+
 
 def main(page: ft.Page):
     page.title = "Inkan"
@@ -14,15 +16,13 @@ def main(page: ft.Page):
         for name, device in devices_dict.items():
             options.append(
                 ft.dropdown.Option(
-                key=device,
-                text=name,
+                    key=device,
+                    text=name,
                 )
             )
         return options
 
     def devices_changed(e):
-        selected_node = e.control.value
-        print(selected_node)
         page.update()
 
     devices = ft.Dropdown(
@@ -35,5 +35,24 @@ def main(page: ft.Page):
     )
 
     page.add(devices)
+
+    def on_restore_button_clicked(e):
+        if not devices.value:
+            print("No device selected")
+            return
+        files = os.listdir(devices.value)
+        for file in files:
+            disk_utils.decompress_folder(
+                f"{devices.value}/{file}",
+                f"{os.path.expanduser('~')}/{file.split('.')[0]}",
+            )
+
+    restore_button = ft.FilledTonalButton(
+        text="Restore my data!",
+        on_click=on_restore_button_clicked,
+    )
+
+    page.add(restore_button)
+
 
 ft.app(main)
