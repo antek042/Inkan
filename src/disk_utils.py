@@ -31,7 +31,7 @@ def compress_folder(folder_path, output_path, level=10):
     os.remove(tar_path)
 
 
-def decompress_folder(file_path, output_path, level=10):
+def decompress_folder(file_path, output_path):
     """
     Decompresses a .tar.zst archive into a specified folder.
 
@@ -50,7 +50,7 @@ def decompress_folder(file_path, output_path, level=10):
 
     tar_path = os.path.join(output_path, "tmp_extract.tar")
 
-    dctx = zstd.ZstdDecompressor(level=level)
+    dctx = zstd.ZstdDecompressor()
 
     with open(file_path + ".tar.zst", "rb") as input_f, open(tar_path, "wb") as output_f:
         dctx.copy_stream(input_f, output_f)
@@ -70,14 +70,11 @@ def get_devices_dict():
     """
 
     context = pyudev.Context()
-
     devices = {}
-
     for device in context.list_devices(subsystem="block", DEVTYPE="disk"):
         if device.get("ID_BUS") == "usb":
             with open("/proc/mounts") as f:
                 for line in f:
                     if device.device_node in line:
                         devices[device.get("ID_MODEL")] = line.split()[1]
-
     return devices
