@@ -3,6 +3,7 @@ gi.require_version("Gtk", "4.0")
 from gi.repository import Gtk, Gio
 import disk_utils
 import os
+import shutil
 
 
 class InkanWindow(Gtk.ApplicationWindow):
@@ -51,7 +52,10 @@ class InkanWindow(Gtk.ApplicationWindow):
                     os.path.join(device, file),
                     target
                 )
-                print(f"Restored {file} to {target}")
+            elif file.endswith(".png") or file.endswith(".jpg"):
+                wallpaper_path = os.path.join(os.path.expanduser("~"), f".local/share/backgrounds/{file}")
+                shutil.move(os.path.join(device, file), wallpaper_path)
+                disk_utils.set_wallpaper(wallpaper_path)
 
 
 class InkanApp(Gtk.Application):

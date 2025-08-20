@@ -2,7 +2,6 @@ import tarfile
 import zstandard as zstd
 import os
 import pyudev
-import shutil
 
 
 def compress_folder(folder_path, output_path, level=10):
@@ -78,3 +77,20 @@ def get_devices_dict():
                     if device.device_node in line:
                         devices[device.get("ID_MODEL")] = line.split()[1]
     return devices
+
+def set_wallpaper(file_path):
+    """
+    Sets the desktop wallpaper to the specified image file.
+
+    Args:
+        file_path (str): Path to the image file to set as wallpaper.
+    """
+    if os.path.exists(file_path):
+        try:
+            from gi.repository import Gio
+            settings = Gio.Settings("org.gnome.desktop.background")
+            settings.set_string("picture-uri", f"file://{file_path}")
+        except Exception as e:
+            print(f"Failed to set wallpaper: {e}")
+    else:
+        print(f"File does not exist: {file_path}")
