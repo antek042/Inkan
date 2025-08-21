@@ -16,6 +16,7 @@ def compress_folder(folder_path, output_path, level=10):
     Notes:
         Uses Zstandard compression inside a TAR container.
     """
+
     tar_path = f"{output_path}.tar"
     zst_path = f"{output_path}.tar.zst"
 
@@ -43,7 +44,7 @@ def decompress_folder(file_path, output_path):
         Extracts all files from the Zstandard-compressed TAR archive into
         the specified output directory, preserving the folder structure.
     """
-    
+
     if not os.path.isdir(output_path):
         os.makedirs(output_path, exist_ok=True)
 
@@ -51,7 +52,9 @@ def decompress_folder(file_path, output_path):
 
     dctx = zstd.ZstdDecompressor()
 
-    with open(file_path + ".tar.zst", "rb") as input_f, open(tar_path, "wb") as output_f:
+    with open(file_path + ".tar.zst", "rb") as input_f, open(
+        tar_path, "wb"
+    ) as output_f:
         dctx.copy_stream(input_f, output_f)
 
     with tarfile.open(tar_path, "r") as tf:
@@ -78,6 +81,7 @@ def get_devices_dict():
                         devices[device.get("ID_MODEL")] = line.split()[1]
     return devices
 
+
 def set_wallpaper(file_path):
     """
     Sets the desktop wallpaper to the specified image file.
@@ -88,6 +92,7 @@ def set_wallpaper(file_path):
     if os.path.exists(file_path):
         try:
             from gi.repository import Gio
+
             settings = Gio.Settings("org.gnome.desktop.background")
             settings.set_string("picture-uri", f"file://{file_path}")
         except Exception as e:
