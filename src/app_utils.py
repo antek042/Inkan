@@ -55,7 +55,7 @@ def search_for_app(name):
 
 def search_for_alternatives(app):
     """
-    Searches for alternative applications using openalternative.co and checks if they are available on Flathub.
+    Searches for alternative applications using alternative.me and checks if they are available on Flathub.
 
     Args:
         app (str): The name or ID of the application to find alternatives for.
@@ -63,20 +63,13 @@ def search_for_alternatives(app):
     Returns:
         str or None: The Flatpak application ID of the first alternative found on Flathub, or None if none found.
     """
-    URL = f"https://openalternative.co/alternatives/{app.replace(' ', '-').lower()}"
+    URL = f"https://alternative.me/{app.replace(' ', '-').lower()}"
     html = gazpacho.get(URL)
     soup = gazpacho.Soup(html)
-    data = soup.find(
-        "h2",
-        {
-            "class": "font-display font-semibold text-2xl tracking-tight md:text-3xl leading-tight! truncate underline decoration-transparent group-hover:decoration-foreground/30"
-        },
-        mode="all",
-    )
-
+    headers = soup.find("li", {"class" : "alternative media"})
+    data = [header.attrs["id"] for header in headers]
     for header in data:
-        name = header.text
-        app_id = search_for_app(name)
+        app_id = search_for_app(header)
         if app_id is not None:
             return app_id
 

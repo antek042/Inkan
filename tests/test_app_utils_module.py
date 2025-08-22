@@ -51,29 +51,39 @@ def test_search_for_app_returns_none_when_no_app_found(mock_search):
 
 @patch("gazpacho.get")
 @patch("gazpacho.Soup")
-def test_search_for_alternatives_returns_app_id_when_found(mock_soup, mock_gazpacho_get):
+@patch("app_utils.search_for_app")
+def test_search_for_alternatives_returns_app_id_when_found(mock_search_for_app, mock_soup_class, mock_get):
     """Tests if search_for_alternatives returns the correct app ID when an alternative is found."""
 
-    mock_gazpacho_get.return_value = "<html></html>"
+    mock_get.return_value =  "<html></html>"
+    
+    fake_headers = [MagicMock(attrs={"id": "alt-app-1"}), MagicMock(attrs={"id": "alt-app-2"})]
 
-    mock_header = MagicMock()
-    mock_header.text = "GIMP"
-    mock_soup.return_value.find.return_value = [mock_header]
+    mock_soup_instance = MagicMock()
+    mock_soup_instance.find.return_value = fake_headers
+    mock_soup_class.return_value = mock_soup_instance
 
-    result = search_for_alternatives("photoshop")
-    assert result == "org.gimp.GIMP"
+    mock_search_for_app.side_effect = [None, "org.flathub.alt-app-2"]
+
+    result = search_for_alternatives("Firefox")
+    assert result == "org.flathub.alt-app-2"
 
 
 @patch("gazpacho.get")
 @patch("gazpacho.Soup")
-def test_search_for_alternatives_returns_none_when_not_found(mock_soup, mock_gazpacho_get):
+@patch("app_utils.search_for_app")
+def test_search_for_alternatives_returns_none_when_not_found(mock_search_for_app, mock_soup_class, mock_get):
     """Tests if search_for_alternatives returns None when no alternatives are found."""
 
-    mock_gazpacho_get.return_value = "<html></html>"
+    mock_get.return_value =  "<html></html>"
+    
+    fake_headers = [MagicMock(attrs={"id": "alt-app-1"}), MagicMock(attrs={"id": "alt-app-2"})]
 
-    mock_header = MagicMock()
-    mock_header.text = "inkan_test_1234567"
-    mock_soup.return_value.find.return_value = [mock_header]
+    mock_soup_instance = MagicMock()
+    mock_soup_instance.find.return_value = fake_headers
+    mock_soup_class.return_value = mock_soup_instance
 
-    result = search_for_alternatives("photoshop")
+    mock_search_for_app.side_effect = [None, None]
+
+    result = search_for_alternatives("Firefox")
     assert result is None
