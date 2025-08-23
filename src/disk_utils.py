@@ -1,7 +1,8 @@
-import tarfile
-import zstandard as zstd
 import os
+import tarfile
+
 import pyudev
+import zstandard as zstd
 
 
 def compress_folder(folder_path, output_path, level=10):
@@ -16,7 +17,6 @@ def compress_folder(folder_path, output_path, level=10):
     Notes:
         Uses Zstandard compression inside a TAR container.
     """
-
     tar_path = f"{output_path}.tar"
     zst_path = f"{output_path}.tar.zst"
 
@@ -36,15 +36,13 @@ def decompress_folder(file_path, output_path):
     Decompresses a .tar.zst archive into a specified folder.
 
     Args:
-        archive_path (str): Path to the .tar.zst archive to decompress.
+        file_path (str): Path to the .tar.zst archive to decompress.
         output_path (str): Path where the decompressed folder will be created.
-        level (int, optional): Compression level, defaults to 10.
 
     Notes:
         Extracts all files from the Zstandard-compressed TAR archive into
         the specified output directory, preserving the folder structure.
     """
-
     if not os.path.isdir(output_path):
         os.makedirs(output_path, exist_ok=True)
 
@@ -52,9 +50,7 @@ def decompress_folder(file_path, output_path):
 
     dctx = zstd.ZstdDecompressor()
 
-    with open(file_path + ".tar.zst", "rb") as input_f, open(
-        tar_path, "wb"
-    ) as output_f:
+    with open(file_path, "rb") as input_f, open(tar_path, "wb") as output_f:
         dctx.copy_stream(input_f, output_f)
 
     with tarfile.open(tar_path, "r") as tf:
@@ -68,9 +64,8 @@ def get_devices_dict():
     Returns a list of available external drives.
 
     Returns:
-        list: A list of available external drives.
+        dict: A dictionary of available external drives.
     """
-
     context = pyudev.Context()
     devices = {}
     for device in context.list_devices(subsystem="block", DEVTYPE="disk"):

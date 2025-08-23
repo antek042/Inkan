@@ -38,7 +38,7 @@ def test_decompress_folder_decompress_files():
         decompress_dir = os.path.join(tmpdir, "decompressed")
         os.mkdir(decompress_dir)
 
-        decompress_folder(output_path, decompress_dir)
+        decompress_folder(output_path + ".tar.zst", decompress_dir)
 
         files = os.listdir(decompress_dir)
         assert (
