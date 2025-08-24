@@ -67,23 +67,21 @@ def get_devices_dict(platform):
     Returns:
         dict: A dictionary of available external drives.
     """
+    devices = {}
     if platform == "Linux":
         import pyudev
 
         context = pyudev.Context()
-        devices = {}
         for device in context.list_devices(subsystem="block", DEVTYPE="disk"):
             if device.get("ID_BUS") == "usb":
                 with open("/proc/mounts") as f:
                     for line in f:
                         if device.device_node in line:
                             devices[device.get("ID_MODEL")] = line.split()[1]
-        return devices
     elif platform == "Windows":
         import wmi
 
         context = wmi.WMI()
-        devices = {}
         for disk in context.Win32_DiskDrive():
             if "USB" in disk.InterfaceType:
                 for partition in disk.associators("Win32_DiskDriveToDiskPartition"):
@@ -91,6 +89,8 @@ def get_devices_dict(platform):
                         "Win32_LogicalDiskToPartition"
                     ):
                         devices[disk.Model] = logical_disk.DeviceID
+    
+    return devices
 
 
 def set_wallpaper(file_path):
