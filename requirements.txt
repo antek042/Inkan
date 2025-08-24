@@ -1,13 +1,13 @@
 accessible-pygments==0.0.5
 alabaster==1.0.0
 babel==2.17.0
-beautifulsoup4==4.13.4
 black==25.1.0
 certifi==2025.8.3
 charset-normalizer==3.4.3
 click==8.2.1
 docutils==0.21.2
 gazpacho==1.1
+ghp-import==2.1.0
 idna==3.10
 imagesize==1.4.1
 iniconfig==2.1.0
@@ -22,10 +22,15 @@ pycairo==1.28.0
 pydata-sphinx-theme==0.15.4
 Pygments==2.19.2
 PyGObject==3.52.3
+PyQt6==6.9.1
+PyQt6-Qt6==6.9.1
+PyQt6_sip==13.10.2
 pytest==8.4.1
+python-dateutil==2.9.0.post0
 pyudev==0.24.3
 requests==2.32.5
 roman-numerals-py==3.1.0
+six==1.17.0
 snowballstemmer==3.0.1
 soupsieve==2.7
 Sphinx==8.2.3
@@ -38,4 +43,5 @@ sphinxcontrib-qthelp==2.0.0
 sphinxcontrib-serializinghtml==2.0.0
 typing_extensions==4.14.1
 urllib3==2.5.0
+WMI==1.4.9
 zstandard==0.24.0
