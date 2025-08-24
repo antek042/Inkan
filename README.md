@@ -13,13 +13,6 @@
 - Transfer documents, photos, music, and videos
 - Transfer selected applications
 
-## 🛠️ Technologies
-This project uses:
-- [pyudev](https://pyudev.readthedocs.io/) – Linux device management
-- [zstandard](https://facebook.github.io/zstd/) – fast data compression
-- [pytest](https://docs.pytest.org/) – automated testing
-- [GTK4](https://www.gtk.org/) – graphical user interface
-
 ## 🚦 Status
 **Alpha** – the project is in a very early stage of development.
 
@@ -33,4 +26,5 @@ Instructions:
 git clone https://github.com/antek5421/inkan.git
 cd inkan
 pip install -r requirements.txt
-python main.py
+cd src
+python gui_linux.py
