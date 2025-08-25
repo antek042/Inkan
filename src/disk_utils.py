@@ -89,7 +89,7 @@ def get_devices_dict(platform):
                         "Win32_LogicalDiskToPartition"
                     ):
                         devices[disk.Model] = logical_disk.DeviceID
-    
+
     return devices
 
 

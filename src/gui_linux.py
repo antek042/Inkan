@@ -18,7 +18,7 @@ class InkanWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Inkan")
-        self.setFixedSize(600, 400)
+        self.setFixedSize(200, 150)
 
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
@@ -71,6 +71,10 @@ class InkanWindow(QMainWindow):
                         app_utils.download_from_flathub(name)
                     elif name := app_utils.search_for_alternatives(app):
                         app_utils.download_from_flathub(name)
+
+        QMessageBox.information(
+            self, "Success", "All files decompressed and copied. Hello Linux!"
+        )
 
 
 def main():
