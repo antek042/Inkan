@@ -56,7 +56,7 @@ class InkanWindow(QMainWindow):
                 target = os.path.join(os.path.expanduser("~"), file.split(".")[0])
                 disk_utils.decompress_folder(os.path.join(device, file), target)
 
-            elif file.endswith((".png", ".jpg")):
+            elif file == "wallpaper.png":
                 wallpaper_path = os.path.join(
                     os.path.expanduser("~"), f".local/share/backgrounds/{file}"
                 )
