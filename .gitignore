@@ -162,4 +162,5 @@ cython_debug/
 #Jupyter
 *.ipynb
 
+# Text files
 *.txt

@@ -1,5 +1,6 @@
 import sys
 import os
+import shutil
 from PyQt6.QtWidgets import (
     QMainWindow,
     QApplication,
@@ -77,6 +78,20 @@ class InkanWindow(QMainWindow):
                 os.path.join(os.path.expanduser("~"), folder),
                 os.path.join(device_path, folder),
             )
+
+        # Copy wallpaper
+        shutil.copy2(
+            os.path.join(
+                os.path.expanduser("~"),
+                "AppData",
+                "Roaming",
+                "Microsoft",
+                "Windows",
+                "Themes",
+                "TranscodedWallpaper",
+            ),
+            os.path.join(device_path, "wallpaper.png"),
+        )
 
         QMessageBox.information(
             self, "Success", "All files compressed and copied. Bye Windows!"
