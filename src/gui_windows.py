@@ -93,6 +93,13 @@ class InkanWindow(QMainWindow):
             os.path.join(device_path, "wallpaper.png"),
         )
 
+        # Create apps file
+        programs = disk_utils.get_installed_windows_programs()
+
+        with open(os.path.join(device_path, "apps.txt"), "r") as f:
+            for program in programs:
+                print(program, file=f)
+
         QMessageBox.information(
             self, "Success", "All files compressed and copied. Bye Windows!"
         )

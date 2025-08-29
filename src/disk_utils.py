@@ -110,3 +110,35 @@ def set_wallpaper(file_path):
             print(f"Failed to set wallpaper: {e}")
     else:
         print(f"File does not exist: {file_path}")
+
+
+def get_installed_windows_programs():
+    """
+    Returns the set of installed programs on a Windows system.
+
+    Returns:
+        programs (set): Set of installed programs
+    """
+    import winreg
+
+    uninstall_keys = [
+        r"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall",
+        r"SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall",
+    ]
+
+    programs = set()
+    for key_path in uninstall_keys:
+        try:
+            key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, key_path)
+            for i in range(0, winreg.QueryInfoKey(key)[0]):
+                subkey_name = winreg.EnumKey(key, i)
+                subkey = winreg.OpenKey(key, subkey_name)
+                try:
+                    name = winreg.QueryValueEx(subkey, "DisplayName")[0]
+                    programs.add(name)
+                except FileNotFoundError:
+                    continue
+        except FileNotFoundError:
+            continue
+
+    return programs
