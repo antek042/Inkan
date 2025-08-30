@@ -1,7 +1,7 @@
 import os
 import tarfile
 import zstandard as zstd
-
+import subprocess
 
 def compress_folder(folder_path, output_path, level=10):
     """
@@ -93,6 +93,25 @@ def get_devices_dict(platform):
     return devices
 
 
+def detect_desktop_environment():
+    """
+    Detects the current desktop environment from environment variables.
+
+    Returns:
+        str: Name of the desktop environment (e.g., 'GNOME', 'KDE Plasma', 'Cinnamon').
+    """
+    xdg = os.environ.get("XDG_CURRENT_DESKTOP", "").lower()
+    session = os.environ.get("DESKTOP_SESSION", "").lower()
+
+    if "gnome" in xdg or "gnome" in session:
+        return "gnome"
+    elif "kde" in xdg or "kde" in session:
+        return "kde"
+    elif "cinnamon" in xdg or "cinnamon" in session:
+        return "cinnamon"
+
+    return "unknown"
+
 def set_wallpaper(file_path):
     """
     Sets the desktop wallpaper to the specified image file.
@@ -100,16 +119,24 @@ def set_wallpaper(file_path):
     Args:
         file_path (str): Path to the image file to set as wallpaper.
     """
-    if os.path.exists(file_path):
-        try:
-            from gi.repository import Gio
-
-            settings = Gio.Settings("org.gnome.desktop.background")
-            settings.set_string("picture-uri", f"file://{file_path}")
-        except Exception as e:
-            print(f"Failed to set wallpaper: {e}")
-    else:
-        print(f"File does not exist: {file_path}")
+    env = detect_desktop_environment()
+    if env is "gnome":
+        subprocess.run([
+            "gsettings", "set",
+            "org.gnome.desktop.background",
+            "picture-uri-dark", f"file://{file_path}",
+        ])
+    elif env is "kde":
+        subprocess.run([
+            "plasma-apply-wallpaperimage",
+            file_path
+        ])
+    elif env is "cinnamon":
+        subprocess.run([
+            "gsettings", "set",
+            "org.cinnamon.desktop.background",
+            "picture-uri", f"file://{file_path}",
+        ])
 
 
 def get_installed_windows_programs():
