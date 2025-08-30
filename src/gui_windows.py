@@ -31,7 +31,7 @@ class InkanWindow(QMainWindow):
         main_layout.setSpacing(10)
 
         # Devices list
-        self.devices_dict = disk_utils.get_devices_dict("Linux")
+        self.devices_dict = disk_utils.get_devices_dict("Windows")
         self.devices_combo = QComboBox()
         for name, device in self.devices_dict.items():
             self.devices_combo.addItem(name, device)
@@ -96,7 +96,7 @@ class InkanWindow(QMainWindow):
         # Create apps file
         programs = disk_utils.get_installed_windows_programs()
 
-        with open(os.path.join(device_path, "apps.txt"), "r") as f:
+        with open(os.path.join(device_path, "apps.txt"), "w") as f:
             for program in programs:
                 print(program, file=f)
 
