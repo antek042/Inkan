@@ -3,6 +3,7 @@ import tarfile
 import zstandard as zstd
 import subprocess
 
+
 def compress_folder(folder_path, output_path, level=10):
     """
     Compresses a folder into a .tar.zst archive.
@@ -19,14 +20,23 @@ def compress_folder(folder_path, output_path, level=10):
     zst_path = f"{output_path}.tar.zst"
 
     with tarfile.open(tar_path, "w:tar") as tf:
-        tf.add(folder_path, arcname=".")
+
+        def safe_filter(tarinfo):
+            try:
+                fullpath = os.path.join(folder_path, tarinfo.name)
+                os.listdir(fullpath) if os.path.isdir(fullpath) else None
+            except PermissionError:
+                return None
+            return tarinfo
+
+        tf.add(folder_path, arcname=".", filter=safe_filter)
 
     compressor = zstd.ZstdCompressor(level)
-
     with open(tar_path, "rb") as f_in, open(zst_path, "wb") as f_out:
         compressor.copy_stream(f_in, f_out)
 
-    os.remove(tar_path)
+    if os.path.exists(tar_path):
+        os.remove(tar_path)
 
 
 def decompress_folder(file_path, output_path):
@@ -112,6 +122,7 @@ def detect_desktop_environment():
 
     return "unknown"
 
+
 def set_wallpaper(file_path):
     """
     Sets the desktop wallpaper to the specified image file.
@@ -121,22 +132,27 @@ def set_wallpaper(file_path):
     """
     env = detect_desktop_environment()
     if env is "gnome":
-        subprocess.run([
-            "gsettings", "set",
-            "org.gnome.desktop.background",
-            "picture-uri-dark", f"file://{file_path}",
-        ])
+        subprocess.run(
+            [
+                "gsettings",
+                "set",
+                "org.gnome.desktop.background",
+                "picture-uri-dark",
+                f"file://{file_path}",
+            ]
+        )
     elif env is "kde":
-        subprocess.run([
-            "plasma-apply-wallpaperimage",
-            file_path
-        ])
+        subprocess.run(["plasma-apply-wallpaperimage", file_path])
     elif env is "cinnamon":
-        subprocess.run([
-            "gsettings", "set",
-            "org.cinnamon.desktop.background",
-            "picture-uri", f"file://{file_path}",
-        ])
+        subprocess.run(
+            [
+                "gsettings",
+                "set",
+                "org.cinnamon.desktop.background",
+                "picture-uri",
+                f"file://{file_path}",
+            ]
+        )
 
 
 def get_installed_windows_programs():
