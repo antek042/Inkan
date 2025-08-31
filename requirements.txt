@@ -21,7 +21,6 @@ pluggy==1.6.0
 pycairo==1.28.0
 pydata-sphinx-theme==0.15.4
 Pygments==2.19.2
-PyGObject==3.52.3
 PyQt6==6.9.1
 PyQt6-Qt6==6.9.1
 PyQt6_sip==13.10.2
