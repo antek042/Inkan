@@ -13,7 +13,7 @@ from PyQt6.QtWidgets import (
     QGroupBox,
     QSizePolicy,
 )
-import disk_utils
+from . import disk_utils
 
 
 class InkanWindow(QMainWindow):
